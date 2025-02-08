@@ -22,3 +22,8 @@ def show_test_string(my_str):
 def print(str):
     lcd.clear()
     lcd.putstr(str)
+
+def backlight_off():
+    time.sleep(3)
+    lcd.clear()
+    lcd.backlight_off()

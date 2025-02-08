@@ -13,13 +13,17 @@ def connect_to_wlan(ssid, pwd) -> bool:
     wlan.connect(ssid, pwd)
 
     max_wait = 10
+    count = 0
 
-    jm_lcd.print("Connecting to\nNetwork. ^_^")
     while max_wait > 0:
+        jm_lcd.print(f"Connecting to\nNetwork. {count}")
+
         if wlan.status() < 0 | wlan.status() >= 3:
             break
 
         max_wait -= 1
+        count += 1
+
         print(f'waitting for connection... status: {wlan.isconnected()}')
 
         if wlan.isconnected():
@@ -28,7 +32,8 @@ def connect_to_wlan(ssid, pwd) -> bool:
         time.sleep(1)
 
     if wlan.status() != 3:
-        raise RuntimeError('network connection failed')
+        # raise RuntimeError('network connection failed')
+        return False
     else:
         status = wlan.ifconfig()
         print(f'Connected to network. IP address: {status[0]}')
