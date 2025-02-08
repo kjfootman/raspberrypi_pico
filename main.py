@@ -46,8 +46,7 @@ def get_data():
     for i in range(0, n_data):
         hnum = data['hNumber'][i]
         hname = data['name'][i]
-        # print(f'ID: {i}\n{hname}')
-        # print(f'{i} jso')
+        # info = f"{hnum}:\n{hname}"
         jm_lcd.print(f"{hnum}:\n{hname}")
         sleep(5)
 
