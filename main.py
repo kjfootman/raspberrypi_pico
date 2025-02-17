@@ -1,25 +1,19 @@
 from machine import Pin
 from time import sleep
-import jm_network
-import jm_lcd
 import requests
-# import base64
 import ubinascii
-
-SSID = 'SK_WiFiGIGA62FC_2.4G'
-PASSWORD = 'JKO50@8518'
+import jm_bluetooth
+import jm_lcd
 
 pin = Pin("LED", Pin.OUT)
-count = 0
-# print("LED starts flashing...")
+# count = 0
 
-# connect to network
-is_conn = jm_network.connect_to_wlan(SSID, PASSWORD)
+# bluetooth
+ble_uart = jm_bluetooth.BLEUART()
 
-if not is_conn:
-    # if failed to connect to network.
-    jm_lcd.print('Network Conn.\nFailed.')
-    sleep(3)
+while not ble_uart.network_connected:
+    print("not not connected to wifi")
+    sleep(1)
 
 def get_data():
     id = "1007185"
@@ -28,7 +22,6 @@ def get_data():
     bytes = f'{id}:{pw}'.encode('UTF-8')
 
     credential = ubinascii.b2a_base64(bytes).rstrip().decode('ascii')
-    # print(f"credential: {credential}")
     headers = {'Authorization': f'Basic {credential}'}
 
     res = requests.post(url, headers=headers)
@@ -46,20 +39,17 @@ def get_data():
     for i in range(0, n_data):
         hnum = data['hNumber'][i]
         hname = data['name'][i]
-        # info = f"{hnum}:\n{hname}"
-        jm_lcd.print(f"{hnum}:\n{hname}")
-        sleep(5)
 
+        jm_lcd.print(f"{hnum}:\n{hname}")
+
+        sleep(5)
 
 get_data()
 
-while True & is_conn:
+while True:
     try:
         pin.toggle()
-        jm_lcd.print(f'This is a test.\nCount: {count}')
 
-
-        count += 1
         sleep(1) # sec
     except KeyboardInterrupt:
         break
